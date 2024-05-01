@@ -1,0 +1,65 @@
+
+.styledTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    background-color: #f3f3f3;
+}
+
+.styledTable thead tr {
+    background-color: #6c8ca4;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styledTable th,
+.styledTable td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.styledTable tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styledTable tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styledTable tbody tr:last-of-type {
+    border-bottom-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+.styledTable tbody:first-child tr:first-child td,
+.styledTable thead:first-child tr:first-child th {
+  border-top-width: 0;
+}
+
+.styledTable thead:first-child tr:first-child td:first-child,
+.styledTable thead:first-child tr:first-child th:first-child {
+  border-top-left-radius: 1rem;
+}
+
+.styledTable thead th:last-child {
+    border-top-right-radius: 1rem;
+}
+
+.styledTable tbody:last-child tr:last-child td:first-child,
+.styledTable tbody:last-child tr:last-child th:first-child {
+  border-bottom-left-radius: 1rem;
+}
+
+.styledTable th {
+    cursor: pointer;
+    background-color: #6c8ca4; 
+}
+
+.styledTable th:hover {
+    background-color: #5e7f98; 
+}

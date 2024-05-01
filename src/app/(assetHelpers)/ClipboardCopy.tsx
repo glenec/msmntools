@@ -1,9 +1,20 @@
 import { useState } from "react";
 
-type CopyToClipboardProps = {
-    textToCopy: string;
-};
-  
+
+/**
+ * PrevArrow is a functional component that renders a custom left arrow for a carousel.
+ * It includes conditional styling to indicate if it is inactive (not clickable) and
+ * accepts custom CSS class and inline styles.
+ *
+ * @component
+ * @example
+ * return <PrevArrow className="custom-class" style={{ margin: "10px" }} onClick={handleClick} />
+ *
+ * @param {Object} props - Props for the PrevArrow component.
+ * @param {string} props.className - CSS class for custom styling.
+ * @param {React.CSSProperties} props.style - Inline styles for the arrow.
+ * @param {() => void} props.onClick - Function to call when the arrow is clicked.
+ */
 const CopyToClipboard: React.FC<CopyToClipboardProps> = ({ textToCopy }) => {
     const [copied, setCopied] = useState<boolean>(false);
 
@@ -31,6 +42,10 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({ textToCopy }) => {
         </button>
         </div>
     );
+};
+
+type CopyToClipboardProps = {
+    textToCopy: string;
 };
 
 export default CopyToClipboard;

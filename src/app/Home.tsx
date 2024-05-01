@@ -1,16 +1,19 @@
 'use client'
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import Image from 'next/image';
-import Slider from 'react-slick';
+import CentralisedSearch from './(statePages)/CentralisedSearch';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import CostcoSearch from './(statePages)/CostcoSearch';
 
-
-// make sure to uninstall local-cors-proxy
-// npm uninstall -g local-cors-proxy
-// and replace localhost:8010/proxy with masman.photos/ or maybe none?
+/**
+ * HomePage is a React functional component that manages the display of different search pages 
+ * such as 'COSTCO', 'AMAZON', and 'COSTCO_MANIFEST'. It includes a navigation bar that allows 
+ * the user to switch between these pages. The selected page influences the appearance of the 
+ * navigation buttons and controls which search component (CentralisedSearch) is rendered.
+ * @component
+ * @example
+ * return <HomePage />
+ */
 const HomePage: React.FC = () => {
   const [page, setPage] = useState('COSTCO');
   const handlePageChange = (page: string) => {
@@ -32,16 +35,13 @@ const HomePage: React.FC = () => {
     return (
       <div className="flex justify-left border-b-0 border-gray-100 mt-4 z-0">
         <button className="rounded-lg mr-2" style={tabStyle('COSTCO')} onClick={() => handlePageChange('COSTCO')}>
-          <div className="flex flex-col justify-center items-center">
-          {/* <Image src="/costco-logo.png" alt="Costco" width={50} height={50} /> */}
-          <small>COSTCO</small>
-          </div>
+          <small><b>COSTCO</b></small>
         </button>
         <button className="rounded-lg mr-2" style={tabStyle('AMAZON')} onClick={() => handlePageChange('AMAZON')}>
-          AMAZON
+          <small><b>AMAZON</b></small>
         </button>
-        <button className="rounded-lg mr-2" style={tabStyle('COSTCO_IMAGES')} onClick={() => handlePageChange('COSTCO_IMAGES')}>
-          COSTCO IMAGE FINDER
+        <button className="rounded-lg mr-2" style={tabStyle('COSTCO_MANIFEST')} onClick={() => handlePageChange('COSTCO_MANIFEST')}>
+          <small><b>MANIFEST</b></small>
         </button>
       </div>
     );
@@ -55,7 +55,7 @@ const HomePage: React.FC = () => {
     <div className="md:container md:mx-auto bg-zinc-900 ">
       <Nav />
       <div className="rounded-lg pt-4 mb-[-10px]" >
-      {page === 'COSTCO' && <CostcoSearch />}
+        {(page === 'COSTCO' || page === 'AMAZON' || page === 'COSTCO_MANIFEST') && <CentralisedSearch searchType={page} />}
       </div>
       
     </div>

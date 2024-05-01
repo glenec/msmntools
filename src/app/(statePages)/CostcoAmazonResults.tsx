@@ -1,69 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";``
+import { NextArrow, PrevArrow } from "../(assetHelpers)/SliderArrows";
+import { api_url } from "../config";
 import Slider from "react-slick";
 import Image from 'next/image';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import CopyToClipboard from "../(assetHelpers)/ClipboardCopy";
-import { NextArrow, PrevArrow } from "../(assetHelpers)/SliderArrows";
 
-
-const CostcoSearch: React.FC = () => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [submitSearch, setSubmitSearch] = useState("");
-      const image_settings = {
-          dots: true,
-          infinite: false,
-          speed: 500,
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          adaptiveHeight: false,
-          nextArrow: <NextArrow />,
-          prevArrow: <PrevArrow />
-      };
-  
-      function handleSearch(e: React.FormEvent<HTMLFormElement>) {
-          e.preventDefault();
-          if (!searchQuery.trim()) {
-            console.log('Empty search query. Please enter a valid search term.');
-            return;
-          }
-          setSubmitSearch(searchQuery);
-          console.log('Search query:', searchQuery);
-      }
-  
-      function handleSearchInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setSearchQuery(e.target.value)
-      }
-  
-      return (
-        <>
-            <form className="flex border-0 border-gray-200 rounded-lg overflow-hidden z-50 mt-0" onSubmit={handleSearch}>
-                <input 
-                  type="text" 
-                  placeholder="Search..." 
-                  className="px-4 py-2 w-full focus:outline-none rounded-l-lg" 
-                  onChange={handleSearchInputChange}
-                />
-                <button className="flex items-center justify-center px-4 bg-white text-black rounded-r-lg" type="submit" >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                </svg>
-  
-                </button>
-            </form>
-  
-            {searchQuery.trim() && <FetchCostcoResults query={submitSearch} />}
-          </>
-      )
-  }
-
-const FetchCostcoResults: React.FC<{ query: string }> = ({ query }) => {
+/**
+ * CostcoAmazonResults fetches and displays search results based on the provided `query` and `searchType`.
+ * It manages loading state and error handling, and dynamically groups and displays results with image sliders
+ * for each part. Uses a responsive grid layout to present the items.
+ *
+ * @component
+ * @example
+ * return <FetchCentralisedSearch query="12345" searchType="COSTCO_PRODUCT" />
+ *
+ * @param {Object} props - Props object for FetchCentralisedSearch component.
+ * @param {string} props.query - The search query string used to fetch results.
+ * @param {string} props.searchType - Identifies the type of search, used to construct the fetch URL.
+ */
+const CostcoAmazonResults: React.FC<{ query: string, searchType: string }> = ({ query, searchType }) => {
     const [results, setResults] = useState<{ [id: string]: { description: string; images: string[] } }>({});
     const [isLoading, setLoading] = useState(false);
-    
     useEffect(() => {
       if (!query) return;
-      console.log('Fetching Costco results for:', query);
+      console.log(`Fetching ${searchType} results for:`, query);
       setLoading(true);
       let grouped: { [id: string]: 
         {
@@ -71,7 +31,7 @@ const FetchCostcoResults: React.FC<{ query: string }> = ({ query }) => {
           images: string[];
         }} = {};
     
-      fetch(`http://localhost:8010/proxy/costco/search?query=${query}`)
+      fetch(`${api_url}${searchType.toLowerCase()}/search?query=${query}`)
         .then((res) => res.json())
         .then((data) => {
           data.forEach((item: { part_number: string; description: string; image: string; }) => {
@@ -90,10 +50,11 @@ const FetchCostcoResults: React.FC<{ query: string }> = ({ query }) => {
           console.error('Error fetching data:', error);
           setLoading(false);
         });
-      }, [query])
+      }, [query, searchType])
    
     if (isLoading) return <p>Loading...</p>
     if (!results) return <p>No results</p>
+
     const image_settings = {
       dots: true,
       infinite: false,
@@ -106,7 +67,7 @@ const FetchCostcoResults: React.FC<{ query: string }> = ({ query }) => {
     };
   
     return (
-      <div className="costco-search-results grid grid-cols-1 md:grid-cols-4 gap-6 pt-8 bg-zinc-900">  
+      <div className={`${searchType}-search-results grid grid-cols-1 md:grid-cols-4 gap-6 pt-8 bg-zinc-900}`}>  
         {Object.entries(results).map(([part_number, item], i) => (
         <div key={`test=${i}`} className="item-card border-2 border-gray-200 rounded-xl bg-white drop-shadow-md divide-y divide-dashed shadow-white hover:scale-105 hover:transition hover:duration-100">
           <div className="image-card px-12 py-12 relative">
@@ -114,7 +75,7 @@ const FetchCostcoResults: React.FC<{ query: string }> = ({ query }) => {
               {item.images.map((image: string, i: number) => (
                   <div key={`${part_number}=${i}`} className="relative min-h-52">
                       <Image 
-                          src={`http://localhost:8010/proxy/image/${image}`}
+                          src={`${api_url}/image/${image}`}
                           alt="placeholder"
                           fill
                           
@@ -144,6 +105,6 @@ const FetchCostcoResults: React.FC<{ query: string }> = ({ query }) => {
         ))}
       </div>
     )
-  }
+}
 
-export default CostcoSearch;
+export default CostcoAmazonResults;
